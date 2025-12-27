@@ -4,7 +4,8 @@ type ApiResponse = {
   message: string
 }
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000'
+const defaultApiBaseUrl = `${window.location.protocol}//${window.location.hostname}:4000`
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl
 
 export default function App() {
   const [data, setData] = useState<ApiResponse | null>(null)
