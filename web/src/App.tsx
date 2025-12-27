@@ -4,12 +4,25 @@ type ApiResponse = {
   message: string
 }
 
-const hostname =
-  typeof window !== 'undefined' && window.location.hostname
-    ? window.location.hostname
-    : (typeof window !== 'undefined' && window.location.host.split(':')[0]) || 'localhost';
-const defaultApiBaseUrl = `${typeof window !== 'undefined' ? window.location.protocol : 'http:'}//${hostname}:4000`;
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl
+function resolveApiBaseUrl() {
+  const envUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+  if (envUrl && /^https?:\/\/[^/]+/i.test(envUrl)) {
+    return envUrl.replace(/\/+$/, '')
+  }
+
+  if (typeof window !== 'undefined') {
+    const host =
+      window.location.hostname ||
+      (window.location.host ? window.location.host.split(':')[0] : '') ||
+      'localhost'
+    const protocol = window.location.protocol || 'http:'
+    return `${protocol}//${host}:4000`
+  }
+
+  return 'http://localhost:4000'
+}
+
+const apiBaseUrl = resolveApiBaseUrl()
 
 export default function App() {
   const [data, setData] = useState<ApiResponse | null>(null)
