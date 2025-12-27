@@ -4,7 +4,11 @@ type ApiResponse = {
   message: string
 }
 
-const defaultApiBaseUrl = `${window.location.protocol}//${window.location.hostname}:4000`
+const hostname =
+  typeof window !== 'undefined' && window.location.hostname
+    ? window.location.hostname
+    : (typeof window !== 'undefined' && window.location.host.split(':')[0]) || 'localhost';
+const defaultApiBaseUrl = `${typeof window !== 'undefined' ? window.location.protocol : 'http:'}//${hostname}:4000`;
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl
 
 export default function App() {
